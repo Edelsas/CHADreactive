@@ -3,37 +3,59 @@
 # dependencies
 node_modules/
 
-# Expo
+# Expo-related
 .expo/
+.expo-shared/
+.expo-cache/
 dist/
 web-build/
 expo-env.d.ts
 
-# Native
-.kotlin/
-*.orig.*
+# Build cache
+*.log
+*.tmp
+*.temp
+.cache/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Metro
+.metro-health-check*
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Android/iOS builds
+android/
+ios/
+
+# Native credentials
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
+*.orig.*
 
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
-.DS_Store
-*.pem
-
-# local env files
+# Environment files
+.env
 .env*.local
+.env.production
+.env.development
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 
+# Editor-specific
+.vscode/
+.idea/
+*.swp
+.history/
+
+# Jest snapshots
+__snapshots__/
+
+# Ignore example apps
 app-example
