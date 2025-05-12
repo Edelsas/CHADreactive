@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getProfileSession } from './profileSession';
 
@@ -11,11 +12,55 @@ const Profile = () => {
     weightGoal,
     calorieIntake,
     preferredDiet,
-  } = getProfileSession(); // pull live session data
+  } = getProfileSession();
+
+  const [quote, setQuote] = useState('');
+  const [loadingQuote, setLoadingQuote] = useState(true);
+
+  useEffect(() => {
+    const fetchQuote = async () => {
+      try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `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`, // Replace this with your key
+          },
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [
+              {
+                role: 'user',
+                content: 'Give me one short inspirational fitness quote.',
+              },
+            ],
+            max_tokens: 60,
+            temperature: 0.7,
+          }),
+        });
+
+        const json = await response.json();
+        const content = json.choices?.[0]?.message?.content;
+        setQuote(content || 'Keep pushing forward!');
+      } catch (err) {
+        console.error('Failed to fetch quote:', err);
+        setQuote('Keep pushing forward!');
+      } finally {
+        setLoadingQuote(false);
+      }
+    };
+
+    fetchQuote();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Profile Information</Text>
+      <Text style={styles.header}>Your C.H.A.D Profile</Text>
+      {loadingQuote ? (
+        <ActivityIndicator color="#ccc" size="small" style={{ marginBottom: 20 }} />
+      ) : (
+        <Text style={styles.subtext}>{quote}</Text>
+      )}
 
       <View style={styles.infoBox}>
         <Text style={styles.label}>👤 Username:</Text>
@@ -38,6 +83,14 @@ const Profile = () => {
         <Text style={styles.buttonText}>Edit Profile</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/friendslist')}>
+        <Text style={styles.buttonText}>Friend's List</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={() => router.navigate('/tutorial')}>
+        <Text style={styles.buttonText}>Tutorial</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity style={styles.buttonBack} onPress={() => router.back()}>
         <Text style={styles.buttonText}>Back</Text>
       </TouchableOpacity>
@@ -53,11 +106,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
+    backgroundColor: '#1a1a1a',
   },
-  title: {
-    fontSize: 35,
+  header: {
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: 'white',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  subtext: {
+    fontSize: 14,
+    color: '#ccc',
+    fontStyle: 'italic',
+    marginBottom: 25,
+    textAlign: 'center',
   },
   infoBox: {
     backgroundColor: '#f0f8ff',

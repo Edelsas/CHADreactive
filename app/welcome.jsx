@@ -35,7 +35,6 @@ const Welcome = () => {
                     <WideButton text="Food Scanner" navigate="/scan" />
                     <WideButton text="Workout Planner" navigate="/workout" />
                     <WideButton text="Challenges" navigate="/challenges" />
-                    <WideButton text="Go on a Walk" navigate="/walkTracker" />
                     <WideButton text="Settings" navigate="/settings" />
                     <WideButton text="Walk Tracker" navigate="/walkTracker" />
                     <WideButton text="Support" navigate="/support" />

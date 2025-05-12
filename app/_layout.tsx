@@ -32,6 +32,8 @@ export default function RootLayout() {
         <Stack.Screen name="challenges" />
         <Stack.Screen name="aboutyou" />
         <Stack.Screen name="walkTracker" />
+        <Stack.Screen name="friendslist" />
+        <Stack.Screen name="tutorial" />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
