@@ -58,10 +58,11 @@ const AboutYou = () => {
         </View>
 
         <View style={styles.field}>
-          <Text style={styles.label}>🎯 Weight Goal</Text>
+          <Text style={styles.label}>🎯 Weight Goal (kg)</Text>
           <TextInput
             style={styles.input}
             placeholder="e.g. Lose 5kg"
+            keyboardType="numeric"
             value={goal}
             onChangeText={setGoal}
           />

@@ -1,18 +1,35 @@
 import { useRouter } from 'expo-router';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import {
+    Button,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const TrackerInformation = props => {
-  return (
-    <View style={styles.trackerInfo}>
-      <Text style={{ fontWeight: 'bold' }}>{props.tracker}</Text>
-      <Text>{props.value} {props.unit}</Text>
-    </View>
-  );
-};
+const TrackerInformation = ({ tracker, value, unit, editable, onChange }) => (
+  <View style={styles.trackerInfo}>
+    <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>{tracker}</Text>
+    {editable ? (
+      <TextInput
+        style={styles.input}
+        keyboardType="numeric"
+        placeholder="Enter value"
+        value={value}
+        onChangeText={onChange}
+      />
+    ) : (
+      <Text>{value} {unit}</Text>
+    )}
+    {editable && unit ? <Text style={styles.unit}>{unit}</Text> : null}
+  </View>
+);
 
 const OverallHealth = () => {
   const router = useRouter();
+  const [hoursSlept, setHoursSlept] = useState('');
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -25,7 +42,13 @@ const OverallHealth = () => {
 
       <View style={{ alignItems: 'center' }}>
         <TrackerInformation tracker="Calories Burned" value={10} unit="cal" />
-        <TrackerInformation tracker="Hours Slept" value={8} unit="hours" />
+        <TrackerInformation
+          tracker="Hours Slept"
+          value={hoursSlept}
+          unit="hours"
+          editable={true}
+          onChange={setHoursSlept}
+        />
         <TrackerInformation tracker="Hydration Intake" value={68} unit="liters of water" />
         <TrackerInformation tracker="Steps Taken" value={100} unit="steps" />
       </View>
@@ -43,7 +66,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     paddingHorizontal: 35,
-    paddingTop: 50, // for top spacing
+    paddingTop: 50,
   },
   journeyTitle: {
     fontSize: 24,
@@ -59,11 +82,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 14,
     marginTop: 15,
+    alignItems: 'flex-start',
   },
   title: {
     fontSize: 28,
     textAlign: 'center',
     fontWeight: 'bold',
     paddingBottom: 10,
+  },
+  input: {
+    width: '100%',
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    fontSize: 16,
+    paddingVertical: 4,
+  },
+  unit: {
+    marginTop: 5,
+    fontSize: 14,
+    color: '#555',
   },
 });

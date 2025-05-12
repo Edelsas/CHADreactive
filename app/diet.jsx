@@ -1,8 +1,10 @@
 import axios from 'axios';
+import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
+  Dimensions,
   LayoutAnimation,
   ScrollView,
   StyleSheet,
@@ -12,6 +14,7 @@ import {
   View,
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
+import MapView, { Marker } from 'react-native-maps';
 
 const OPENAI_API_KEY = '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';
 
@@ -39,6 +42,8 @@ const Diet = () => {
   const [customDiet, setCustomDiet] = useState('');
   const [loading, setLoading] = useState(false);
   const [planSections, setPlanSections] = useState([]);
+  const [location, setLocation] = useState(null);
+  const [restaurants, setRestaurants] = useState([]);
 
   const dietOptions = [
     { key: '1', value: 'Keto' },
@@ -47,7 +52,28 @@ const Diet = () => {
     { key: '4', value: 'Low Carb' },
     { key: '5', value: 'Vegan' },
     { key: '6', value: 'Mediterranean' },
+    { key: '7', value: 'Balanced' },
   ];
+
+  const fetchLocationAndRestaurants = async (preference) => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Permission to access location was denied');
+      return;
+    }
+
+    let currentLocation = await Location.getCurrentPositionAsync({});
+    setLocation(currentLocation.coords);
+
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${preference}+restaurant+near+me&limit=5&lat=${currentLocation.coords.latitude}&lon=${currentLocation.coords.longitude}`;
+
+    try {
+      const response = await axios.get(url);
+      setRestaurants(response.data);
+    } catch (error) {
+      console.error('Failed to fetch restaurants:', error);
+    }
+  };
 
   const generatePlan = async () => {
     const preference = customDiet || dietType;
@@ -58,6 +84,7 @@ const Diet = () => {
 
     setLoading(true);
     setPlanSections([]);
+    await fetchLocationAndRestaurants(preference);
 
     const prompt = `Create a full-day meal plan for someone following a ${preference} diet. Include these clear headers: Breakfast, Lunch, Dinner, and Snacks (optional). For each, include:
 - Meal Name
@@ -140,6 +167,32 @@ const Diet = () => {
             Feel free to follow this meal plan based on your preference(s) or select a specific one you want!
           </Text>
 
+          {location && (
+            <>
+              <Text style={styles.label}>Nearby {customDiet || dietType} Restaurants</Text>
+              <MapView
+                style={styles.map}
+                initialRegion={{
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                  latitudeDelta: 0.05,
+                  longitudeDelta: 0.05,
+                }}
+              >
+                {restaurants.map((place, idx) => (
+                  <Marker
+                    key={idx}
+                    coordinate={{
+                      latitude: parseFloat(place.lat),
+                      longitude: parseFloat(place.lon),
+                    }}
+                    title={place.display_name}
+                  />
+                ))}
+              </MapView>
+            </>
+          )}
+
           <View style={{ marginTop: 30 }}>
             {planSections.map((section, idx) => (
               <CollapsibleSection key={idx} title={section.title} content={section.body} />
@@ -201,6 +254,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
     paddingHorizontal: 10,
+  },
+  map: {
+    width: Dimensions.get('window').width - 40,
+    height: 250,
+    borderRadius: 12,
+    marginTop: 20,
   },
   backButton: {
     marginTop: 30,
