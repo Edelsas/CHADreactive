@@ -2,15 +2,29 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getProfileSession, setProfileSession } from './profileSession'; // adjust path if needed
 
 const EditProfile = () => {
   const router = useRouter();
 
-  const [username, setUsername] = useState('');
-  const [weight, setWeight] = useState('');
-  const [weightGoal, setWeightGoal] = useState('');
-  const [calorieIntake, setCalorieIntake] = useState('');
-  const [preferredDiet, setPreferredDiet] = useState('');
+  const profile = getProfileSession();
+
+  const [username, setUsername] = useState(profile.username || '');
+  const [weight, setWeight] = useState(profile.weight || '');
+  const [weightGoal, setWeightGoal] = useState(profile.weightGoal || '');
+  const [calorieIntake, setCalorieIntake] = useState(profile.calorieIntake || '');
+  const [preferredDiet, setPreferredDiet] = useState(profile.preferredDiet || '');
+
+  const handleSave = () => {
+    setProfileSession({
+      username,
+      weight,
+      weightGoal,
+      calorieIntake,
+      preferredDiet,
+    });
+    router.back(); // return to Profile screen
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,7 +46,7 @@ const EditProfile = () => {
         <Text style={styles.label}>Preferred Diet</Text>
         <TextInput style={styles.input} placeholder="e.g. Keto, Vegan" value={preferredDiet} onChangeText={setPreferredDiet} />
 
-        <TouchableOpacity style={styles.saveButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Text style={styles.saveButtonText}>💾 Save Changes</Text>
         </TouchableOpacity>
 

@@ -30,6 +30,7 @@ export default function RootLayout() {
         <Stack.Screen name="workout" />
         <Stack.Screen name="calorie" />
         <Stack.Screen name="challenges" />
+        <Stack.Screen name="aboutyou" />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

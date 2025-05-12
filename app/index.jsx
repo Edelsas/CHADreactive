@@ -8,13 +8,21 @@ const SimpleButton = ({ navigate, text }) => {
     <TouchableHighlight
       onPress={() => router.push(navigate)}
       style={styles.button}
-      underlayColor={'rgb(47, 131, 188)'}>
+      underlayColor={'rgb(47, 131, 188)'}
+    >
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableHighlight>
   );
 };
 
 export default function Index() {
+  const router = useRouter();
+
+  const handleLogin = () => {
+    // Navigate to 'aboutyou' screen instead of 'welcome'
+    router.push('aboutyou');
+  };
+
   return (
     <SafeAreaView style={styles.login}>
       <View style={styles.headerContainer}>
@@ -29,7 +37,14 @@ export default function Index() {
         <TextInput style={styles.input} placeholder="Password" placeholderTextColor={"grey"} />
 
         <View style={{ alignItems: 'center' }}>
-          <SimpleButton navigate="welcome" text="Login" />
+          <TouchableHighlight
+            onPress={handleLogin}
+            style={styles.button}
+            underlayColor={'rgb(47, 131, 188)'}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableHighlight>
+
           <SimpleButton navigate="register" text="Register" />
         </View>
       </View>

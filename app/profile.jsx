@@ -1,16 +1,17 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getProfileSession } from './profileSession';
 
 const Profile = () => {
   const router = useRouter();
-
-  // Simulated user data — replace with actual state or props as needed
-  let username = "username";
-  let weight = "35";
-  let weightGoal = "";       // Placeholder
-  let calorieIntake = "";    // Placeholder
-  let preferredDiet = "";    // Placeholder
+  const {
+    username,
+    weight,
+    weightGoal,
+    calorieIntake,
+    preferredDiet,
+  } = getProfileSession(); // pull live session data
 
   return (
     <SafeAreaView style={styles.container}>

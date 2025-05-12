@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import * as Progress from 'react-native-progress';
 import axios from 'axios';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as Progress from 'react-native-progress';
 
-// Replace with your real OpenAI API key
 const OPENAI_API_KEY = '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';
 
-// Default challenges in case API fails
 const defaultChallenges = [
   { id: '1', title: 'Drink 8 Glasses of Water' },
   { id: '2', title: 'Walk 10,000 Steps' },
@@ -15,6 +14,7 @@ const defaultChallenges = [
 ];
 
 const Challenges = () => {
+  const router = useRouter();
   const [challengesData, setChallengesData] = useState([]);
   const [completedChallenges, setCompletedChallenges] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,10 +45,11 @@ const Challenges = () => {
       const lines = aiText.split('\n').filter(line => line.trim() !== '');
       const formattedChallenges = lines.map((line, index) => ({
         id: (index + 1).toString(),
-        title: line.replace(/^\d+[\).\s-]*/, ''), // Remove numbers like 1. or 1) at start
+        title: line.replace(/^\d+[\).\s-]*/, ''),
       }));
 
       setChallengesData(formattedChallenges);
+      setCompletedChallenges([]); // Reset completion when refreshed
     } catch (error) {
       console.error('Failed to fetch challenges:', error);
       setChallengesData(defaultChallenges);
@@ -115,6 +116,14 @@ const Challenges = () => {
           contentContainerStyle={{ paddingTop: 20 }}
         />
       )}
+
+      <TouchableOpacity style={styles.button} onPress={fetchChallengesFromAI}>
+        <Text style={styles.buttonText}>🔄 Refresh Challenges</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.buttonBack} onPress={() => router.back()}>
+        <Text style={styles.buttonText}>← Go Back Home</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -153,5 +162,24 @@ const styles = StyleSheet.create({
   },
   completedItem: {
     backgroundColor: '#a5d6a7',
+  },
+  button: {
+    marginTop: 20,
+    padding: 14,
+    backgroundColor: '#007aff',
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  buttonBack: {
+    marginTop: 10,
+    padding: 14,
+    backgroundColor: '#e53935',
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
