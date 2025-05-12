@@ -12,6 +12,11 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
    ```bash
    npm install
+   npx expo install expo-camera
+   npm install expo-barcode-scanner
+   npm install react-native-raw-bottom-sheet
+   npx expo install react-native-svg
+   npm install react-native-vector-icons
    ```
 
 2. Start the app
