@@ -1,9 +1,22 @@
+import Slider from '@react-native-community/slider';
 import { useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Support = () => {
   const router = useRouter();
+
+  const [dietRating, setDietRating] = useState(3);
+  const [workoutRating, setWorkoutRating] = useState(3);
+  const [restaurantRating, setRestaurantRating] = useState(3);
+
+  const handleSubmit = () => {
+    Alert.alert(
+      'Feedback Submitted',
+      `Diet AI: ${dietRating}/5\nWorkout AI: ${workoutRating}/5\nRestaurant Recommender: ${restaurantRating}/5`
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -23,20 +36,64 @@ const Support = () => {
           <Text style={styles.faqText}>
             <Text style={styles.question}>How does the AI create personalized workout plans?{"\n"}</Text>
             -The AI analyzes your fitness level, goals, and preferences to create tailored workout routines.
-            It adapts over time based on your progress and feedback to ensure you stay on track toward achieving your fitness goals.{"\n\n"}
+            It adapts over time based on your progress and feedback.{"\n\n"}
 
             <Text style={styles.question}>Do I need equipment for the workouts?{"\n"}</Text>
-            -No, the app can design workouts based on your available equipment or lack thereof. Whether you're at the gym or at home with no equipment, the AI will generate effective routines for you.{"\n\n"}
+            -No, the app can design workouts based on your available equipment.{"\n\n"}
 
             <Text style={styles.question}>Can the AI adjust workouts if they are too hard or too easy?{"\n"}</Text>
-            -Yes! The AI learns from your feedback and adjusts the difficulty and intensity of workouts accordingly, ensuring you’re always challenged but not overwhelmed.{"\n\n"}
+            -Yes! The AI learns from your feedback and adjusts the difficulty accordingly.{"\n\n"}
 
             <Text style={styles.question}>How does the app track my progress?{"\n"}</Text>
-            -The app monitors your workout completion, reps/sets, weights used, and overall performance. You can also manually input measurements or progress photos to get a complete view of your fitness journey.{"\n\n"}
+            -The app monitors your workout completion, reps, weights, and performance.{"\n\n"}
 
             <Text style={styles.question}>Can I set specific fitness goals in the app?{"\n"}</Text>
-            -Absolutely! You can set a variety of fitness goals, such as fat loss, muscle gain, or improved endurance, and the AI will create a plan tailored to help you achieve them.
+            -Absolutely! Set goals and the AI will tailor a plan to help achieve them.
           </Text>
+        </View>
+
+        <View style={styles.reviewBox}>
+          <Text style={styles.reviewTitle}>Rate Our AI Features</Text>
+
+          <Text style={styles.label}>🍽️ Diet AI</Text>
+          <Slider
+            style={styles.slider}
+            minimumValue={1}
+            maximumValue={5}
+            step={1}
+            value={dietRating}
+            onValueChange={setDietRating}
+            minimumTrackTintColor="#a8caff"
+          />
+          <Text style={styles.sliderValue}>{dietRating}/5</Text>
+
+          <Text style={styles.label}>💪 Workout AI</Text>
+          <Slider
+            style={styles.slider}
+            minimumValue={1}
+            maximumValue={5}
+            step={1}
+            value={workoutRating}
+            onValueChange={setWorkoutRating}
+            minimumTrackTintColor="#a8caff"
+          />
+          <Text style={styles.sliderValue}>{workoutRating}/5</Text>
+
+          <Text style={styles.label}>🍴 Restaurant Recommender</Text>
+          <Slider
+            style={styles.slider}
+            minimumValue={1}
+            maximumValue={5}
+            step={1}
+            value={restaurantRating}
+            onValueChange={setRestaurantRating}
+            minimumTrackTintColor="#a8caff"
+          />
+          <Text style={styles.sliderValue}>{restaurantRating}/5</Text>
+
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitText}>Submit Review</Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
@@ -110,12 +167,53 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  reviewBox: {
+    backgroundColor: '#2e2e2e',
+    padding: 20,
+    borderRadius: 12,
+    width: '100%',
+    marginBottom: 20,
+  },
+  reviewTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  label: {
+    color: '#ccc',
+    fontSize: 15,
+    marginTop: 15,
+  },
+  slider: {
+    width: '100%',
+    height: 40,
+  },
+  sliderValue: {
+    color: '#a8caff',
+    textAlign: 'right',
+    fontSize: 14,
+    marginBottom: 5,
+  },
+  submitButton: {
+    backgroundColor: '#007aff',
+    padding: 12,
+    borderRadius: 20,
+    marginTop: 15,
+    alignItems: 'center',
+  },
+  submitText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
   backButton: {
     backgroundColor: '#007bff',
     padding: 14,
     borderRadius: 25,
     width: 120,
     alignItems: 'center',
+    marginTop: 20,
   },
   backButtonText: {
     color: '#fff',
