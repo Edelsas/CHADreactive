@@ -1,46 +1,68 @@
-import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
-  Button,
   LayoutAnimation,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  UIManager,
   View,
 } from 'react-native';
+import { SelectList } from 'react-native-dropdown-select-list';
 
 const OPENAI_API_KEY = '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';
 
+const CollapsibleSection = ({ title, content }) => {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <View style={styles.section}>
+      <TouchableOpacity
+        onPress={() => {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          setCollapsed(!collapsed);
+        }}
+        style={styles.sectionHeader}
+      >
+        <Text style={styles.sectionTitle}>{collapsed ? `► ${title}` : `▼ ${title}`}</Text>
+      </TouchableOpacity>
+      {!collapsed && <Text style={styles.sectionContent}>{content}</Text>}
+    </View>
+  );
+};
+
 const Diet = () => {
-  const [preference, setPreference] = useState('');
-  const [mealType, setMealType] = useState('single');
-  const [singleMealTime, setSingleMealTime] = useState('Lunch');
-  const [aiMealPlan, setAiMealPlan] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [showPlan, setShowPlan] = useState(false);
-
   const router = useRouter();
+  const [dietType, setDietType] = useState('');
+  const [customDiet, setCustomDiet] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [planSections, setPlanSections] = useState([]);
 
-  if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-  }
+  const dietOptions = [
+    { key: '1', value: 'Keto' },
+    { key: '2', value: 'Vegetarian' },
+    { key: '3', value: 'High Protein' },
+    { key: '4', value: 'Low Carb' },
+    { key: '5', value: 'Vegan' },
+    { key: '6', value: 'Mediterranean' },
+  ];
 
-  const generateDiet = async () => {
-    if (!preference) return;
+  const generatePlan = async () => {
+    const preference = customDiet || dietType;
+    if (!preference) {
+      alert('Please select or enter a diet preference.');
+      return;
+    }
+
     setLoading(true);
-    setShowPlan(false); // Reset visibility when regenerating
+    setPlanSections([]);
 
-    let userPrompt =
-      mealType === 'fullDay'
-        ? `Create a full-day meal plan (Breakfast, Lunch, Dinner) for the following preference: ${preference}. Include Meal Name, Ingredients List, and Nutrition Information (Calories, Protein, Carbs, Fat) for each meal.`
-        : `Suggest a ${singleMealTime} based on: ${preference}. Include Meal Name, Ingredients List, and Nutrition Information (Calories, Protein, Carbs, Fat).`;
+    const prompt = `Create a full-day meal plan for someone following a ${preference} diet. Include these clear headers: Breakfast, Lunch, Dinner, and Snacks (optional). For each, include:
+- Meal Name
+- Ingredients
+- Estimated Nutrition (Calories, Protein, Carbs, Fat).`;
 
     try {
       const response = await axios.post(
@@ -50,12 +72,12 @@ const Diet = () => {
           messages: [
             {
               role: 'system',
-              content: 'You are a helpful AI dietitian. Always provide meal name, ingredients list, and estimated nutrition facts.',
+              content: 'You are a helpful AI dietitian. Always format responses clearly with nutrition facts.',
             },
-            { role: 'user', content: userPrompt },
+            { role: 'user', content: prompt },
           ],
           temperature: 0.7,
-          max_tokens: 600,
+          max_tokens: 1000,
         },
         {
           headers: {
@@ -64,79 +86,67 @@ const Diet = () => {
           },
         }
       );
-      setAiMealPlan(response.data.choices[0].message.content);
-    } catch (error) {
-      console.error('OpenAI Error:', error);
-      setAiMealPlan('⚠️ Error generating your meal plan.');
+
+      const content = response.data.choices[0].message.content;
+
+      const parsed = content
+        .split(/(?=^.*(?:Breakfast|Lunch|Dinner|Snack).*?$)/gim)
+        .map((part) => {
+          const [titleLine, ...bodyLines] = part.trim().split('\n');
+          return {
+            title: titleLine.trim(),
+            body: bodyLines.join('\n').trim(),
+          };
+        });
+
+      setPlanSections(parsed);
+    } catch (err) {
+      console.error(err);
+      setPlanSections([{ title: 'Error', body: '⚠️ Unable to generate meal plan.' }]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>AI Diet Recommender</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Enter diet preference (e.g., vegetarian, keto)"
-        value={preference}
-        onChangeText={setPreference}
+      <Text style={styles.label}>Select Your Diet Preference</Text>
+      <SelectList
+        data={dietOptions}
+        setSelected={setDietType}
+        placeholder="Choose a preset option"
+        search={false}
       />
 
-      <Text style={styles.label}>Meal Plan Type</Text>
-      <View style={{ height: 120 }}>
-        <Picker
-          selectedValue={mealType}
-          onValueChange={(val) => setMealType(val)}
-        >
-          <Picker.Item label="Single Meal" value="single" />
-          <Picker.Item label="Full Day Plan" value="fullDay" />
-        </Picker>
-      </View>
+      <Text style={styles.label}>Or type in your diet preference</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="e.g. pescatarian, gluten-free"
+        value={customDiet}
+        onChangeText={setCustomDiet}
+      />
 
-      {mealType === 'single' && (
+      <TouchableOpacity style={styles.generateButton} onPress={generatePlan}>
+        <Text style={styles.generateButtonText}>Generate Meal Plan</Text>
+      </TouchableOpacity>
+
+      {loading && <ActivityIndicator size="large" color="#007aff" style={{ marginTop: 20 }} />}
+
+      {planSections.length > 0 && (
         <>
-          <Text style={styles.label}>Meal Time</Text>
-          <View style={{ height: 120 }}>
-            <Picker
-              selectedValue={singleMealTime}
-              onValueChange={(val) => setSingleMealTime(val)}
-            >
-              <Picker.Item label="Breakfast" value="Breakfast" />
-              <Picker.Item label="Lunch" value="Lunch" />
-              <Picker.Item label="Dinner" value="Dinner" />
-              <Picker.Item label="Snack" value="Snack" />
-            </Picker>
+          <Text style={styles.helperText}>
+            Feel free to follow this meal plan based on your preference(s) or select a specific one you want!
+          </Text>
+
+          <View style={{ marginTop: 30 }}>
+            {planSections.map((section, idx) => (
+              <CollapsibleSection key={idx} title={section.title} content={section.body} />
+            ))}
           </View>
         </>
       )}
-
-      <Button title="Generate Meal Plan" onPress={generateDiet} />
-
-      {loading ? (
-        <ActivityIndicator size="large" color="#007aff" style={{ marginTop: 20 }} />
-      ) : aiMealPlan ? (
-        <>
-          <TouchableOpacity
-            style={styles.toggleButton}
-            onPress={() => {
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-              setShowPlan(!showPlan);
-            }}
-          >
-            <Text style={styles.toggleButtonText}>
-              {showPlan ? 'Hide Meal Plan ▲' : 'Show Meal Plan ▼'}
-            </Text>
-          </TouchableOpacity>
-
-          {showPlan && (
-            <View style={styles.result}>
-              <Text style={styles.resultText}>{aiMealPlan}</Text>
-            </View>
-          )}
-        </>
-      ) : null}
 
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Text style={styles.backButtonText}>← Return to Home</Text>
@@ -154,38 +164,43 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   title: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
     color: '#007aff',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 20,
-    fontSize: 16,
-    backgroundColor: '#fff',
-  },
   label: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 8,
-    marginTop: 12,
-  },
-  result: {
     marginTop: 20,
-    backgroundColor: '#e6f9f3',
-    padding: 20,
-    borderRadius: 12,
-    borderColor: '#b3e5c2',
-    borderWidth: 1,
+    marginBottom: 8,
   },
-  resultText: {
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  generateButton: {
+    marginTop: 20,
+    padding: 14,
+    backgroundColor: '#007aff',
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  generateButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
     fontSize: 16,
-    lineHeight: 22,
+  },
+  helperText: {
+    marginTop: 20,
+    fontSize: 15,
+    textAlign: 'center',
+    color: '#333',
+    paddingHorizontal: 10,
   },
   backButton: {
     marginTop: 30,
@@ -199,16 +214,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-  toggleButton: {
-    marginTop: 20,
-    paddingVertical: 10,
-    alignItems: 'center',
-    backgroundColor: '#e0e0e0',
-    borderRadius: 8,
+  section: {
+    marginBottom: 20,
+    backgroundColor: '#e6f9f3',
+    borderRadius: 10,
+    overflow: 'hidden',
   },
-  toggleButtonText: {
+  sectionHeader: {
+    padding: 12,
+    backgroundColor: '#c8f0e0',
+  },
+  sectionTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
-    color: '#007aff',
-    fontSize: 15,
+  },
+  sectionContent: {
+    padding: 12,
+    fontSize: 14,
+    lineHeight: 20,
   },
 });

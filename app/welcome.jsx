@@ -1,32 +1,32 @@
-import { useRouter } from 'expo-router'
-import { useState } from 'react'
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// custom reusable button
-const WideButton = (props) => {
+// reusable wide button
+const WideButton = ({ navigate, text }) => {
   const router = useRouter();
-
   return (
-    <TouchableHighlight 
-      onPress={() => router.navigate(props.navigate)}
+    <TouchableHighlight
+      onPress={() => router.navigate(navigate)}
       style={styles.button}
       underlayColor={'rgb(47, 131, 188)'}
     >
-      <Text style={styles.buttonText}>{props.text}</Text>
+      <Text style={styles.buttonText}>{text}</Text>
     </TouchableHighlight>
   );
-}
+};
 
 const Welcome = () => {
   const router = useRouter();
-
-  const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
-
-      <Text style={styles.title}>Welcome to C.H.A.D.</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.title}>Welcome to C.H.A.D.</Text>
+        <Text style={styles.subtext}>Your personal dashboard to better health</Text>
+      </View>
 
       <View style={styles.buttonLayout}>
         <WideButton text="Profile" navigate="/profile" />
@@ -35,9 +35,9 @@ const Welcome = () => {
         <WideButton text="Workout Planner" navigate="/workout" />
         <WideButton text="Challenges" navigate="/challenges" />
         <WideButton text="Settings" navigate="/settings" />
-        <WideButton text="Support" navigate="/profile" />
+        <WideButton text="Support" navigate="/support" />
 
-        <TouchableHighlight 
+        <TouchableHighlight
           onPress={() => router.back()}
           style={styles.smallButton}
           underlayColor={'rgba(188, 54, 47, 0.63)'}
@@ -45,23 +45,34 @@ const Welcome = () => {
           <Text style={styles.buttonText}>Log Out</Text>
         </TouchableHighlight>
       </View>
-
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Welcome
-
+export default Welcome;
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 28,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    paddingBottom: 20,
+  container: {
+    flex: 1,
+    backgroundColor: '#1a1a1a',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
   },
-  linkText: {
-    color: 'blue'
+  headerContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  title: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+  },
+  subtext: {
+    fontSize: 16,
+    color: '#ccc',
+    marginTop: 8,
+    textAlign: 'center',
   },
   buttonLayout: {
     justifyContent: 'center',
@@ -69,21 +80,22 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 15,
-    width: '70%',
-    backgroundColor: 'rgb(70, 181, 255)', 
+    width: '100%',
+    backgroundColor: 'rgb(70, 181, 255)',
     borderRadius: 20,
-    marginVertical: 13
+    marginVertical: 10,
   },
   smallButton: {
     padding: 15,
-    width: '30%',
-    backgroundColor: 'rgb(228, 34, 34)', 
+    width: '40%',
+    backgroundColor: 'rgb(228, 34, 34)',
     borderRadius: 20,
-    marginVertical: 13
+    marginTop: 20,
   },
   buttonText: {
     textAlign: 'center',
     color: 'white',
-    fontWeight: 'bold'
-  }
-})
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});

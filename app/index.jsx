@@ -17,6 +17,11 @@ const SimpleButton = ({ navigate, text }) => {
 export default function Index() {
   return (
     <SafeAreaView style={styles.login}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.welcomeTitle}>Welcome to C.H.A.D</Text>
+        <Text style={styles.subtext}>Your personal app to get you on the right track</Text>
+      </View>
+
       <View style={styles.card}>
         <Text style={styles.title}>Login</Text>
 
@@ -35,22 +40,46 @@ export default function Index() {
 const styles = StyleSheet.create({
   login: {
     flex: 1,
+    backgroundColor: '#1a1a1a',
     justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  headerContainer: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  welcomeTitle: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+  },
+  subtext: {
+    fontSize: 16,
+    color: '#ccc',
+    textAlign: 'center',
+    marginTop: 10,
   },
   title: {
-    fontSize: 34,
+    fontSize: 28,
     fontWeight: "bold",
-    paddingVertical: 20
+    color: 'white',
+    paddingVertical: 20,
+    textAlign: 'center',
   },
   card: {
-    margin: 50,
+    backgroundColor: '#333',
+    padding: 30,
+    borderRadius: 16,
   },
   input: {
     height: 40,
     marginVertical: 10,
     padding: 10,
     borderWidth: 1,
-    borderRadius: 4
+    borderRadius: 4,
+    borderColor: '#555',
+    color: 'white',
   },
   button: {
     backgroundColor: 'rgb(70, 181, 255)',

@@ -33,7 +33,7 @@ const Profile = () => {
         <Text style={styles.value}>{preferredDiet || 'Not set'}</Text>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => router.navigate('/EditProfile')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.navigate('/editProfile')}>
         <Text style={styles.buttonText}>Edit Profile</Text>
       </TouchableOpacity>
 
