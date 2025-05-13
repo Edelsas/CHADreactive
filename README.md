@@ -2,13 +2,14 @@
 <<<<<<< HEAD
 =======
 >>>>>>> 059760f (Initial commit)
-# Welcome to your Expo app 👋
+# Welcome to C.H.A.D app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 # FINAL DEMO VIDEO LINK: https://youtu.be/gC3SvPEQh-E
 ## Get started
 
-1. Install dependencies
+1. Install dependencies/needed app for phone
+   Please go to you prefered app store based on your phone OS, and serch up Expo go
 
    ```bash
    npm install
@@ -19,11 +20,15 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install react-native-vector-icons
    ```
 
-2. Start the app
+3. Start the app
 
    ```bash
    npx expo start
    ```
+
+4. Scan the qr code in phone camera app and it will promt you to open Expo go, let the packages load up and it will appear on your phone
+5. VERSION HAS BYPASS OF USER LOGIN, PLEASE HIT LOGIN ONCE AT "USER LOGIN"
+6. Fill in information as needed and it will lead you to homescreen
 
 In the output, you'll find options to open the app in a
 
