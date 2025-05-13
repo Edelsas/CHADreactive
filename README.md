@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 059760f (Initial commit)
-# Welcome to C.H.A.D app 👋
+# Welcome to C.H.A.D app
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 # FINAL DEMO VIDEO LINK: https://youtu.be/gC3SvPEQh-E
