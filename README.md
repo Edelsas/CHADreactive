@@ -16,7 +16,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install react-native-vector-icons
    ```
 
-3. Start the app
+3. Start the app in prefered IDE terminal
 
    ```bash
    npx expo start
@@ -26,8 +26,8 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 5. VERSION HAS BYPASS OF USER LOGIN, PLEASE HIT LOGIN ONCE AT "USER LOGIN"
 6. Fill in information as needed and it will lead you to homescreen
 
-In the output, you'll find options to open the app in a
-
+#If need an emulator for the app
+===================================
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
