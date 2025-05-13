@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const TrackerInformation = ({ tracker, value, unit, editable, onChange }) => (
   <View style={styles.trackerInfo}>
-    <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>{tracker}</Text>
+    <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 5 }}>{tracker}</Text>
     {editable ? (
       <TextInput
         style={styles.input}
@@ -21,7 +21,7 @@ const TrackerInformation = ({ tracker, value, unit, editable, onChange }) => (
         onChangeText={onChange}
       />
     ) : (
-      <Text>{value} {unit}</Text>
+      <Text style={{color: '#ccc'}}>{value} {unit}</Text>
     )}
     {editable && unit ? <Text style={styles.unit}>{unit}</Text> : null}
   </View>
@@ -37,7 +37,7 @@ const OverallHealth = () => {
 
       <View>
         <Text style={styles.title}>Overall Health Tracker</Text>
-        <Text style={{ textAlign: 'center' }}>Your progress for today.</Text>
+        <Text style={{ textAlign: 'center', color: "#ccc" }}>Your progress for today.</Text>
       </View>
 
       <View style={{ alignItems: 'center' }}>
@@ -54,7 +54,7 @@ const OverallHealth = () => {
       </View>
 
       <View style={{ marginTop: 30 }}>
-        <Button title="Return to Home" onPress={() => router.push('/welcome')} />
+        <Button title="Return to Home" onPress={() => router.back('/welcome')} />
       </View>
     </SafeAreaView>
   );
@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 35,
     paddingTop: 50,
+    backgroundColor: '#1a1a1a'
   },
   journeyTitle: {
     fontSize: 24,
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#333',
     borderRadius: 14,
     marginTop: 15,
     alignItems: 'flex-start',
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     paddingBottom: 10,
+    color: 'white'
   },
   input: {
     width: '100%',

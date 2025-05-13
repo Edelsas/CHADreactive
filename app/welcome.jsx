@@ -40,7 +40,7 @@ const Welcome = () => {
                     <WideButton text="Support" navigate="/support" />
 
                     <TouchableHighlight
-                        onPress={() => router.back()}
+                        onPress={() => router.navigate('/')}
                         style={styles.smallButton}
                         underlayColor={'rgba(188, 54, 47, 0.63)'}
                     >

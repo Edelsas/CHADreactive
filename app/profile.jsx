@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   infoBox: {
-    backgroundColor: '#f0f8ff',
+    backgroundColor: '#555',
     padding: 20,
     borderRadius: 15,
     width: '100%',
@@ -133,11 +133,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginTop: 10,
+    color: 'white'
   },
   value: {
     fontSize: 16,
     marginBottom: 5,
-    color: '#333',
+    color: '#ccc',
   },
   button: {
     padding: 15,

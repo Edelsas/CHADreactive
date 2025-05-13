@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import MapView, { Marker } from 'react-native-maps';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const OPENAI_API_KEY = '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';
 
@@ -136,75 +137,78 @@ const Diet = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>AI Diet Recommender</Text>
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>AI Diet Recommender</Text>
 
-      <Text style={styles.label}>Select Your Diet Preference</Text>
-      <SelectList
-        data={dietOptions}
-        setSelected={setDietType}
-        placeholder="Choose a preset option"
-        search={false}
-      />
+        <Text style={styles.label}>Select Your Diet Preference</Text>
+        <SelectList
+          data={dietOptions}
+          setSelected={setDietType}
+          placeholder="Choose a preset option"
+          search={false}
+        />
 
-      <Text style={styles.label}>Or type in your diet preference</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="e.g. pescatarian, gluten-free"
-        value={customDiet}
-        onChangeText={setCustomDiet}
-      />
+        <Text style={styles.label}>Or type in your diet preference</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="e.g. pescatarian, gluten-free"
+          value={customDiet}
+          onChangeText={setCustomDiet}
+        />
 
-      <TouchableOpacity style={styles.generateButton} onPress={generatePlan}>
-        <Text style={styles.generateButtonText}>Generate Meal Plan</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.generateButton} onPress={generatePlan}>
+          <Text style={styles.generateButtonText}>Generate Meal Plan</Text>
+        </TouchableOpacity>
 
-      {loading && <ActivityIndicator size="large" color="#007aff" style={{ marginTop: 20 }} />}
+        {loading && <ActivityIndicator size="large" color="#007aff" style={{ marginTop: 20 }} />}
 
-      {planSections.length > 0 && (
-        <>
-          <Text style={styles.helperText}>
-            Feel free to follow this meal plan based on your preference(s) or select a specific one you want!
-          </Text>
+        {planSections.length > 0 && (
+          <>
+            <Text style={styles.helperText}>
+              Feel free to follow this meal plan based on your preference(s) or select a specific one you want!
+            </Text>
 
-          {location && (
-            <>
-              <Text style={styles.label}>Nearby {customDiet || dietType} Restaurants</Text>
-              <MapView
-                style={styles.map}
-                initialRegion={{
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                  latitudeDelta: 0.05,
-                  longitudeDelta: 0.05,
-                }}
-              >
-                {restaurants.map((place, idx) => (
-                  <Marker
-                    key={idx}
-                    coordinate={{
-                      latitude: parseFloat(place.lat),
-                      longitude: parseFloat(place.lon),
-                    }}
-                    title={place.display_name}
-                  />
-                ))}
-              </MapView>
-            </>
-          )}
+            {location && (
+              <>
+                <Text style={styles.label}>Nearby {customDiet || dietType} Restaurants</Text>
+                <MapView
+                  style={styles.map}
+                  initialRegion={{
+                    latitude: location.latitude,
+                    longitude: location.longitude,
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05,
+                  }}
+                >
+                  {restaurants.map((place, idx) => (
+                    <Marker
+                      key={idx}
+                      coordinate={{
+                        latitude: parseFloat(place.lat),
+                        longitude: parseFloat(place.lon),
+                      }}
+                      title={place.display_name}
+                    />
+                  ))}
+                </MapView>
+              </>
+            )}
 
-          <View style={{ marginTop: 30 }}>
-            {planSections.map((section, idx) => (
-              <CollapsibleSection key={idx} title={section.title} content={section.body} />
-            ))}
-          </View>
-        </>
-      )}
+            <View style={{ marginTop: 30 }}>
+              {planSections.map((section, idx) => (
+                <CollapsibleSection key={idx} title={section.title} content={section.body} />
+              ))}
+            </View>
+          </>
+        )}
 
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>← Return to Home</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <Text style={styles.backButtonText}>← Return to Home</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+    </SafeAreaView>
   );
 };
 
