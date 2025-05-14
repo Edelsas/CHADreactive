@@ -1,10 +1,16 @@
 # Welcome to C.H.A.D app
+# PLEASE EMAIL: Ervin.Delsas@student.csulb.edu for valid API key
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 # FINAL DEMO VIDEO LINK: https://youtu.be/gC3SvPEQh-E
 ## Get started
 
-1. Install dependencies/needed app for phone
+1. Plug in API keys into following files in Chadbackup\app folder:
+- challenges.jsx
+- diet.jsx
+- workout.jsx
+
+2. Install dependencies/needed app for phone
    Please go to you prefered app store based on your phone OS, and serch up Expo go
 
    ```bash
