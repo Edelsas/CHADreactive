@@ -1,10 +1,11 @@
+//PLEASE INSERT VALID OPENAI KEY IN LINE 8
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as Progress from 'react-native-progress';
 
-const OPENAI_API_KEY = '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';
+const OPENAI_API_KEY = 'INSERT OPENAI API KEY HERE';
 
 const defaultChallenges = [
   { id: '1', title: 'Drink 8 Glasses of Water' },

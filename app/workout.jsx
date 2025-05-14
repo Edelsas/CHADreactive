@@ -1,20 +1,21 @@
+//PLEASE INSERT VALID OPENAI KEY IN LINE 18
 import Slider from '@react-native-community/slider';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-    Button,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const OPENAI_API_KEY = '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';
+const OPENAI_API_KEY = 'INSERT OPENAI API HERE';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
